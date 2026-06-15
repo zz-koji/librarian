@@ -17,4 +17,8 @@ export const CreateBookSchema = z.object({
   isbn: z.string().regex(/^(?:\d[- ]?){9}[\dX]$|^(?:\d[- ]?){12}\d$/, 'Invalid ISBN'),
 });
 
-export type CreateBookDto = z.infer<typeof CreateBookSchema>;
+export type CreateBookBody = z.infer<typeof CreateBookSchema>;
+
+export const UpdateBookSchema = CreateBookSchema.partial();
+
+export type UpdateBookBody = z.infer<typeof UpdateBookSchema>;

@@ -2,14 +2,27 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Kysely } from 'kysely';
 import { DB_CONNECTION } from 'src/database/database.tokens';
 import { DB } from 'src/database/db.types';
-import { CreateBookDto, GetBookQuery, GetBooksQuery } from './books.schema';
+import { CreateBookBody, GetBookQuery, GetBooksQuery, UpdateBookBody } from './books.schema';
 
 @Injectable()
 export class BooksRepository {
   constructor(@Inject(DB_CONNECTION) private readonly db: Kysely<DB>) {}
 
-  createBook(dto: CreateBookDto) {
-    return this.db.insertInto('books').values(dto).returningAll().executeTakeFirst();
+  createBook(body: CreateBookBody) {
+    return this.db.insertInto('books').values(body).returningAll().executeTakeFirst();
+  }
+
+  updateBook(body: UpdateBookBody, id: string) {
+    return this.db
+      .updateTable('books')
+      .set(body)
+      .where('books.id', '=', id)
+      .returningAll()
+      .executeTakeFirst();
+  }
+
+  deleteBook(id: string) {
+    return this.db.deleteFrom('books').where('id', '=', id).returningAll().executeTakeFirst();
   }
 
   getBook(filters: GetBookQuery) {

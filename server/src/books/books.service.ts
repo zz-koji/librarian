@@ -1,20 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBookDto, GetBookQuery, GetBooksQuery } from './books.schema';
+import { CreateBookBody, GetBookQuery, GetBooksQuery, UpdateBookBody } from './books.schema';
 import { BooksRepository } from './books.repository';
 
 @Injectable()
 export class BooksService {
   constructor(private readonly repo: BooksRepository) {}
 
-  async createBook(dto: CreateBookDto) {
-    return this.repo.createBook(dto);
+  createBook(body: CreateBookBody) {
+    return this.repo.createBook(body);
   }
 
-  async getBook(query: GetBookQuery) {
+  updateBook(body: UpdateBookBody, id: string) {
+    return this.repo.updateBook(body, id);
+  }
+
+  deleteBook(id: string) {
+    return this.repo.deleteBook(id);
+  }
+
+  getBook(query: GetBookQuery) {
     return this.repo.getBook(query);
   }
 
-  async getBooks(query: GetBooksQuery) {
+  getBooks(query: GetBooksQuery) {
     return this.repo.getBooks(query);
   }
 }
