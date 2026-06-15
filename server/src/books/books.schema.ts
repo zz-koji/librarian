@@ -11,3 +11,10 @@ export const GetBooksQuerySchema = z.object({
 });
 
 export type GetBooksQuery = z.infer<typeof GetBooksQuerySchema>;
+
+export const CreateBookSchema = z.object({
+  title: z.string().min(1),
+  isbn: z.string().regex(/^(?:\d[- ]?){9}[\dX]$|^(?:\d[- ]?){12}\d$/, 'Invalid ISBN'),
+});
+
+export type CreateBookDto = z.infer<typeof CreateBookSchema>;
