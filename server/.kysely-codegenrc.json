@@ -1,0 +1,4 @@
+{
+  "camelCase": false,
+  "outFile": "src/database/db.types.ts"
+}
