@@ -12,7 +12,7 @@ export class ImportService {
 
     return this.books.insertImportedBook({
       title: catalogEntry.title,
-      isbn: catalogEntry.isbn[0],
+      isbn: catalogEntry.isbn,
       source: catalogEntry.source,
       external_id: catalogEntry.externalId,
     });

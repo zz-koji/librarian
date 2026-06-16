@@ -80,12 +80,11 @@ export class OpenLibraryAdapter implements BookCatalogPort {
   }
 
   private resolveSearchBooksIsbn(isbns: string[]): string {
-    if (!isbns || isbns.length === 0) {
-      return '';
-    }
-    else {
+    if (isbns && isbns.length > 0) {
       return isbns[0];
     }
+
+    return '';
   }
 
   async getBook(query: CatalogGetBookQuery) {
