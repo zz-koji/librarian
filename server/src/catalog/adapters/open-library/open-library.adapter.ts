@@ -97,13 +97,10 @@ export class OpenLibraryAdapter implements BookCatalogPort {
     const rawResponse = await firstValueFrom(observable);
     const envelope = GetBookEnvelopeSchema.parse(rawResponse);
     const book = envelope[bibkey];
-    if (!book) {
-      throw new NotFoundException(`No catalog entry for ${query.externalId}`);
-    }
     return this.transformGetBookResponse(book, query.externalId);
   }
 
-  private async transformGetBookResponse(response: GetBookResponse, externalId: string): Promise<BooksSearchResult> {
+  private transformGetBookResponse(response: GetBookResponse, externalId: string): BooksSearchResult {
     return {
       authors: response.authors,
       coverId: response.cover,
