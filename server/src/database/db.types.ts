@@ -13,8 +13,10 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Books {
   created_at: Generated<Timestamp>;
+  external_id: string | null;
   id: Generated<string>;
   isbn: string;
+  source: string | null;
   title: string;
 }
 
