@@ -10,11 +10,17 @@ export class ImportService {
   async importBook(importBody: ImportBookBody) {
     const catalogEntry = await this.catalogService.getBook(importBody);
 
-    return this.books.insertImportedBook({
+    const inserted = await this.books.insertImportedBook({
       title: catalogEntry.title,
       isbn: catalogEntry.isbn,
       source: catalogEntry.source,
       external_id: catalogEntry.externalId,
     });
+
+    if (!inserted) {
+      return this.books.getImportedBook(catalogEntry.source, catalogEntry.externalId);
+    }
+
+    return inserted;
   }
 }

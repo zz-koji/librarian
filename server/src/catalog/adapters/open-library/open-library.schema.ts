@@ -33,19 +33,36 @@ export const SearchResponseSchema = z.object({
 
 export type SearchResponse = z.infer<typeof SearchResponseSchema>;
 
+export const GetBookCoverResponseSchema = z.object({
+  small: z.string(),
+  medium: z.string(),
+  large: z.string(),
+});
+
+export const GetBookAuthorsResponseSchema = z.object({
+  name: z.string(),
+});
+
 export const GetBookResponseSchema = z.object({
   title: z.string(),
-  authors: z.array(z.string()).nullish(),
+  authors: z.array(GetBookAuthorsResponseSchema).nullish().transform((authors) => authors?.map((author) => author.name)),
   publish_date: z.coerce.date().nullish(),
-  covers: z.array(z.number()).nullish().transform((coverIds) => {
-    if (!coverIds) {
+  cover: GetBookCoverResponseSchema.nullish().transform((cover) => {
+    if (!cover) {
       return null;
     }
-    return coverIds[0];
+    const match = cover.large.match(/\/b\/id\/(\d+)-/);
+    return match ? Number(match[1]) : null;
   }),
-  isbn_10: z.array(z.string()).nullish(),
-  isbn_13: z.array(z.string()).nullish(),
+  identifiers: z.object({
+    isbn_10: z.array(z.string()).nullish(),
+    isbn_13: z.array(z.string()).nullish(),
+  }),
 });
+
+export const GetBookEnvelopeSchema = z.record(z.string(), GetBookResponseSchema);
+
+export type GetBookEnvelope = z.infer<typeof GetBookEnvelopeSchema>;
 
 export type GetBookResponse = z.infer<typeof GetBookResponseSchema>;
 

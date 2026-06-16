@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import {
   BookCoverResponse,
   BookCoverResponseSchema,
+  GetBookEnvelopeSchema,
   GetBookResponse,
   GetBookResponseSchema,
   SearchQuery,
@@ -88,24 +89,25 @@ export class OpenLibraryAdapter implements BookCatalogPort {
   }
 
   async getBook(query: CatalogGetBookQuery) {
-    const observable = this.httpService.get<unknown>(this.baseUrl + `/books/${query.externalId}.json`, {
-      params: {
-        fields: this.searchBooksFields,
-        key: query.externalId,
-      },
-    })
-      .pipe(map((response) => response.data));
+    const bibkey = `OLID:${query.externalId}`;
+    const observable = this.httpService.get<unknown>(this.baseUrl + `/api/books`, {
+      params: { bibkeys: bibkey, format: 'json', jscmd: 'data' },
+    }).pipe(map((response) => response.data));
 
     const rawResponse = await firstValueFrom(observable);
-    const parsedResponse = GetBookResponseSchema.parse(rawResponse);
-    return this.transformGetBookResponse(parsedResponse, query.externalId);
+    const envelope = GetBookEnvelopeSchema.parse(rawResponse);
+    const book = envelope[bibkey];
+    if (!book) {
+      throw new NotFoundException(`No catalog entry for ${query.externalId}`);
+    }
+    return this.transformGetBookResponse(book, query.externalId);
   }
 
-  private transformGetBookResponse(response: GetBookResponse, externalId: string): BooksSearchResult {
+  private async transformGetBookResponse(response: GetBookResponse, externalId: string): Promise<BooksSearchResult> {
     return {
       authors: response.authors,
-      coverId: response.covers,
-      isbn: this.resolveGetBookIsbn(response.isbn_10, response.isbn_13),
+      coverId: response.cover,
+      isbn: this.resolveGetBookIsbn(response.identifiers.isbn_10, response.identifiers.isbn_13),
       externalId: externalId,
       firstPublishYear: response.publish_date?.getFullYear(),
       title: response.title,

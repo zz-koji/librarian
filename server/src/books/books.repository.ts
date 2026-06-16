@@ -22,6 +22,14 @@ export class BooksRepository {
       .executeTakeFirst();
   }
 
+  getImportedBook(source: string, externalId: string) {
+    return this.db.selectFrom('books')
+      .selectAll()
+      .where('source', '=', source)
+      .where('external_id', '=', externalId)
+      .executeTakeFirst();
+  }
+
   updateBook(body: UpdateBookBody, id: string) {
     return this.db
       .updateTable('books')
