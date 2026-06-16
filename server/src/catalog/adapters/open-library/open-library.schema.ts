@@ -30,3 +30,13 @@ export const SearchResponseSchema = z.object({
 });
 
 export type SearchResponse = z.infer<typeof SearchResponseSchema>;
+
+export const BookCoverResponseSchema = z.object({
+  id: z.number(),
+  source_url: z.string(),
+  width: z.number(),
+  height: z.number(),
+  olid: z.string(),
+});
+
+export type BookCoverResponse = z.infer<typeof BookCoverResponseSchema>;

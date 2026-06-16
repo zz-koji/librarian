@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { BOOK_CATALOG_PORT } from './catalog.tokens';
 import type { BookCatalogPort } from './catalog.port';
-import { GetBooksQuery } from 'src/books/books.schema';
+import { GetBooksQuery, GetCoverParams } from 'src/books/books.schema';
 
 @Injectable()
 export class CatalogService {
@@ -9,5 +9,9 @@ export class CatalogService {
 
   searchBooks(query: GetBooksQuery) {
     return this.catalog.searchBooks(query);
+  }
+
+  getCover(params: GetCoverParams) {
+    return this.catalog.getCover(params);
   }
 }
