@@ -10,5 +10,6 @@ import { OpenLibraryAdapter } from './adapters/open-library/open-library.adapter
   imports: [HttpModule, ConfigModule],
   controllers: [CatalogController],
   providers: [CatalogService, { provide: BOOK_CATALOG_PORT, useClass: OpenLibraryAdapter }],
+  exports: [CatalogService],
 })
-export class CatalogModule {}
+export class CatalogModule { }
