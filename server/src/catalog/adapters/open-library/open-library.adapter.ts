@@ -3,6 +3,8 @@ import { HttpService } from '@nestjs/axios';
 import {
   BookCoverResponse,
   BookCoverResponseSchema,
+  GetBookResponse,
+  GetBookResponseSchema,
   SearchQuery,
   SearchResponse,
   SearchResponseSchema,
@@ -13,6 +15,7 @@ import { BookCatalogPort } from 'src/catalog/catalog.port';
 import type {
   BookCoverResult,
   BooksSearchResult,
+  CatalogGetBookQuery,
   CatalogSearchQuery,
   GetCoverParams,
 } from 'src/catalog/catalog.schema';
@@ -71,9 +74,56 @@ export class OpenLibraryAdapter implements BookCatalogPort {
         firstPublishYear: book.first_publish_year,
         title: book.title,
         source: 'OpenLibrary',
-        isbn: book.isbn,
+        isbn: this.resolveSearchBooksIsbn(book.isbn),
       };
     });
+  }
+
+  private resolveSearchBooksIsbn(isbns: string[]): string {
+    if (!isbns || isbns.length === 0) {
+      return '';
+    }
+    else {
+      return isbns[0];
+    }
+  }
+
+  async getBook(query: CatalogGetBookQuery) {
+    const observable = this.httpService.get<unknown>(this.baseUrl + `/books/${query.externalId}.json`, {
+      params: {
+        fields: this.searchBooksFields,
+        key: query.externalId,
+      },
+    })
+      .pipe(map((response) => response.data));
+
+    const rawResponse = await firstValueFrom(observable);
+    const parsedResponse = GetBookResponseSchema.parse(rawResponse);
+    return this.transformGetBookResponse(parsedResponse, query.externalId);
+  }
+
+  private transformGetBookResponse(response: GetBookResponse, externalId: string): BooksSearchResult {
+    return {
+      authors: response.authors,
+      coverId: response.covers,
+      isbn: this.resolveGetBookIsbn(response.isbn_10, response.isbn_13),
+      externalId: externalId,
+      firstPublishYear: response.publish_date?.getFullYear(),
+      title: response.title,
+      source: 'OpenLibrary',
+    };
+  }
+
+  private resolveGetBookIsbn(isbn10: string[] | null | undefined, isbn13: string[] | null | undefined): string {
+    if (isbn13 && isbn13.length > 0) {
+      return isbn13[0];
+    }
+
+    if (isbn10 && isbn10.length > 0) {
+      return isbn10[0];
+    }
+
+    return '';
   }
 
   async getCover(params: GetCoverParams) {

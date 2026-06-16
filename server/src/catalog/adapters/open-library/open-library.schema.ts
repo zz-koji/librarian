@@ -33,6 +33,22 @@ export const SearchResponseSchema = z.object({
 
 export type SearchResponse = z.infer<typeof SearchResponseSchema>;
 
+export const GetBookResponseSchema = z.object({
+  title: z.string(),
+  authors: z.array(z.string()).nullish(),
+  publish_date: z.coerce.date().nullish(),
+  covers: z.array(z.number()).nullish().transform((coverIds) => {
+    if (!coverIds) {
+      return null;
+    }
+    return coverIds[0];
+  }),
+  isbn_10: z.array(z.string()).nullish(),
+  isbn_13: z.array(z.string()).nullish(),
+});
+
+export type GetBookResponse = z.infer<typeof GetBookResponseSchema>;
+
 export const BookCoverResponseSchema = z.object({
   id: z.number(),
   source_url: z.string(),

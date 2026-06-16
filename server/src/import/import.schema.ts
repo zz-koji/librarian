@@ -1,10 +1,7 @@
 import { z } from 'zod';
-import { BooksSearchResultSchema } from 'src/catalog/catalog.schema';
-
-export const ImportBookSchema = BooksSearchResultSchema.extend({
+export const ImportBookSchema = z.object({
   source: z.string().min(1),
-  externalId: z.string().min(1),
-  isbn: z.array(z.string()).nonempty('At least one ISBN is required to import a book'),
+  externalId: z.string().min(1)
 });
 
 export type ImportBookBody = z.infer<typeof ImportBookSchema>;

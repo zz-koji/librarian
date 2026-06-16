@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export const CatalogGetBookQuerySchema = z.object({
+  externalId: z.string().min(1),
+});
+
+export type CatalogGetBookQuery = z.infer<typeof CatalogGetBookQuerySchema>;
+
 export const CatalogSearchQuerySchema = z.object({
   title: z.string().min(1).optional(),
   author: z.string().min(1).optional(),
@@ -30,7 +36,7 @@ export const BooksSearchResultSchema = z.object({
   coverId: z.number().nullish(),
   firstPublishYear: z.number().nullish(),
   source: z.string(),
-  isbn: z.array(z.string()),
+  isbn: z.string(),
 });
 
 export type BooksSearchResult = z.infer<typeof BooksSearchResultSchema>;
