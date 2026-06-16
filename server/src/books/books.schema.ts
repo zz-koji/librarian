@@ -12,32 +12,6 @@ export const GetBooksQuerySchema = z.object({
 
 export type GetBooksQuery = z.infer<typeof GetBooksQuerySchema>;
 
-export const GetCoverParamsSchema = z.object({
-  coverId: z.coerce.number(),
-});
-
-export type GetCoverParams = z.infer<typeof GetCoverParamsSchema>;
-
-export const BookCoverResultSchema = z.object({
-  externalId: z.number(),
-  imageUrl: z.string(),
-  width: z.number().nullish(),
-  height: z.number().nullish(),
-});
-
-export type BookCoverResult = z.infer<typeof BookCoverResultSchema>;
-
-export const BooksSearchResultSchema = z.object({
-  externalId: z.string(),
-  title: z.string(),
-  authors: z.array(z.string()).nullish(),
-  coverId: z.number().nullish(),
-  firstPublishYear: z.number().nullish(),
-  source: z.string(),
-});
-
-export type BooksSearchResult = z.infer<typeof BooksSearchResultSchema>;
-
 export const CreateBookSchema = z.object({
   title: z.string().min(1),
   isbn: z.string().regex(/^(?:\d[- ]?){9}[\dX]$|^(?:\d[- ]?){12}\d$/, 'Invalid ISBN'),

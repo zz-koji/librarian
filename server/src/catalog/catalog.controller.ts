@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { GetBooksQuerySchema, GetCoverParamsSchema } from 'src/books/books.schema';
+import { CatalogSearchQuerySchema, GetCoverParamsSchema } from './catalog.schema';
 import { CatalogService } from './catalog.service';
 
 @Controller('catalog')
@@ -7,7 +7,7 @@ export class CatalogController {
   constructor(private readonly catalogService: CatalogService) {}
   @Get()
   searchBooks(@Query() rawQuery: unknown) {
-    const query = GetBooksQuerySchema.parse(rawQuery);
+    const query = CatalogSearchQuerySchema.parse(rawQuery);
     return this.catalogService.searchBooks(query);
   }
 

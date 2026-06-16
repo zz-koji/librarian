@@ -4,6 +4,7 @@ export const SearchQuerySchema = z.object({
   title: z.string().optional(),
   author: z.string().optional(),
   subject: z.string().optional(),
+  fields: z.string(),
 });
 
 export type SearchQuery = z.infer<typeof SearchQuerySchema>;
@@ -19,6 +20,7 @@ export const SearchResponseBookSchema = z.object({
   ia: z.array(z.string()).nullish(),
   author_key: z.array(z.string()).nullish(),
   public_scan_b: z.boolean().nullish(),
+  isbn: z.array(z.string()),
 });
 
 export type SearchResponseDoc = z.infer<typeof SearchResponseBookSchema>;

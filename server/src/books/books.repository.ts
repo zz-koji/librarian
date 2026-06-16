@@ -1,15 +1,25 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Kysely } from 'kysely';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Insertable, Kysely } from 'kysely';
 import { DB_CONNECTION } from 'src/database/database.tokens';
-import { DB } from 'src/database/db.types';
+import { Books, DB } from 'src/database/db.types';
 import { CreateBookBody, GetBookQuery, GetBooksQuery, UpdateBookBody } from './books.schema';
 
 @Injectable()
 export class BooksRepository {
-  constructor(@Inject(DB_CONNECTION) private readonly db: Kysely<DB>) {}
+  constructor(@Inject(DB_CONNECTION) private readonly db: Kysely<DB>) { }
 
   createBook(body: CreateBookBody) {
     return this.db.insertInto('books').values(body).returningAll().executeTakeFirst();
+  }
+
+  insertImportedBook(values: Insertable<Books>) {
+    return this.db
+      .insertInto('books')
+      .values(values)
+      .onConflict((oc) => oc.constraint('books_source_external_id')
+        .doNothing())
+      .returningAll()
+      .executeTakeFirst();
   }
 
   updateBook(body: UpdateBookBody, id: string) {
