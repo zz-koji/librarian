@@ -13,6 +13,9 @@ param appInsightsname string = 'appinsights-${appSuffix}'
 @description('The name of the container app environment')
 param containerAppEnvironment string = 'env-${appSuffix}'
 
+@description('Please input your docker image path.')
+param image string
+
 var containerAppName = 'kojicontainer24'
 
 
@@ -48,6 +51,7 @@ resource env 'Microsoft.App/managedEnvironments@2026-01-01' = {
     }
   }
 }
+
 // Below is the container app itself
 resource containerApp 'Microsoft.App/containerApps@2026-01-01' = {
   name: containerAppName
@@ -73,7 +77,7 @@ resource containerApp 'Microsoft.App/containerApps@2026-01-01' = {
     containers: [
       {
         name: containerAppName
-        image: 'mcr.microsoft.com/k8se/quickstart:latest' 
+        image: image 
         resources: {
           cpu: 1
           memory: '2Gi'
