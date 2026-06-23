@@ -80,7 +80,7 @@ export class OpenLibraryAdapter implements BookCatalogPort {
     });
   }
 
-  private resolveSearchBooksIsbn(isbns: string[]): string {
+  private resolveSearchBooksIsbn(isbns?: string[]): string {
     if (isbns && isbns.length > 0) {
       return isbns[0];
     }

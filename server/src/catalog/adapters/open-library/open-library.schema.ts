@@ -20,7 +20,7 @@ export const SearchResponseBookSchema = z.object({
   ia: z.array(z.string()).nullish(),
   author_key: z.array(z.string()).nullish(),
   public_scan_b: z.boolean().nullish(),
-  isbn: z.array(z.string()),
+  isbn: z.array(z.string()).optional(),
 });
 
 export type SearchResponseDoc = z.infer<typeof SearchResponseBookSchema>;
