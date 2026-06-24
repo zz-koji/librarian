@@ -1,0 +1,25 @@
+@host = http://localhost:{{$dotenv PORT}}
+
+### @name searchByTitle
+GET {{host}}/catalog?title=dune
+Accept: application/json
+
+### @name searchByAuthor
+GET {{host}}/catalog?author=frank+herbert
+Accept: application/json
+
+### @name searchBySubject
+GET {{host}}/catalog?subject=science+fiction
+Accept: application/json
+
+### @name searchByTitleAndAuthor
+GET {{host}}/catalog?title=dune&author=frank+herbert
+Accept: application/json
+
+### @name getCoverById
+GET {{host}}/catalog/covers/{{searchByTitle.response.body.$[0].coverId}}
+Accept: application/json
+
+### @name getCoverByExplicitId
+GET {{host}}/catalog/covers/8739161
+Accept: application/json

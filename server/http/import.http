@@ -1,0 +1,9 @@
+@host = http://localhost:{{$dotenv PORT}}
+
+### @name importBookByExternalId
+POST {{host}}/import
+Content-Type: application/json
+
+{
+    "externalId": "OL28969075M"
+}

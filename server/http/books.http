@@ -1,0 +1,22 @@
+@host = http://localhost:{{$dotenv PORT}}
+
+### @name createBook
+POST {{host}}/books
+Content-Type: application/json
+
+{
+    "title": "Dune",
+    "isbn": "9780441013593"
+}
+
+### @name getBookById
+GET {{host}}/books?id={{createBook.response.body.id}}
+Accept: application/json
+
+### @name getBookByExplicitId
+GET {{host}}/books?id=00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+### @name findBooksByTitle
+GET {{host}}/books/find?title=Duna
+Accept: application/json
