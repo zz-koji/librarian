@@ -1,0 +1,12 @@
+# Never copy these into the image — they bloat it or are host-specific.
+node_modules
+dist
+coverage
+.git
+.env
+.env.*
+*.log
+.idea
+.vscode
+Dockerfile
+.dockerignore
