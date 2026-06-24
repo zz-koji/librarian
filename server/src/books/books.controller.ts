@@ -4,7 +4,7 @@ import { CreateBookSchema, GetBookQuerySchema, GetBooksQuerySchema } from './boo
 
 @Controller('books')
 export class BooksController {
-  constructor(private readonly books: BooksService) {}
+  constructor(private readonly books: BooksService) { }
 
   @Post()
   createBook(@Body() rawData: unknown) {

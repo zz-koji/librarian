@@ -21,6 +21,7 @@ export const SearchResponseBookSchema = z.object({
   author_key: z.array(z.string()).nullish(),
   public_scan_b: z.boolean().nullish(),
   isbn: z.array(z.string()).optional(),
+  edition_key: z.array(z.string()).optional()
 });
 
 export type SearchResponseDoc = z.infer<typeof SearchResponseBookSchema>;
@@ -46,7 +47,12 @@ export const GetBookAuthorsResponseSchema = z.object({
 export const GetBookResponseSchema = z.object({
   title: z.string(),
   authors: z.array(GetBookAuthorsResponseSchema).nullish().transform((authors) => authors?.map((author) => author.name)),
-  publish_date: z.coerce.date().nullish(),
+  publish_date: z.string().nullish().transform((val) => {
+    if (!val) return undefined;
+    const date = new Date(val);
+    if (!Number.isNaN(date.getTime())) return undefined;
+    return date;
+  }),
   cover: GetBookCoverResponseSchema.nullish().transform((cover) => {
     if (!cover) {
       return null;

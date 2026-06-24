@@ -37,6 +37,7 @@ export class OpenLibraryAdapter implements BookCatalogPort {
     'author_key',
     'public_scan_b',
     'isbn',
+    'edition_key'
   ].join(',');
 
   constructor(
@@ -76,6 +77,7 @@ export class OpenLibraryAdapter implements BookCatalogPort {
         title: book.title,
         source: 'OpenLibrary',
         isbn: this.resolveSearchBooksIsbn(book.isbn),
+        editionKey: book.edition_key
       };
     });
   }
@@ -97,6 +99,7 @@ export class OpenLibraryAdapter implements BookCatalogPort {
     const rawResponse = await firstValueFrom(observable);
     const envelope = GetBookEnvelopeSchema.parse(rawResponse);
     const book = envelope[bibkey];
+
     return this.transformGetBookResponse(book, query.externalId);
   }
 

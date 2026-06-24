@@ -51,7 +51,7 @@ export class BooksRepository {
     const query = this.db.selectFrom('books').selectAll().limit(100);
 
     if (filters.title) {
-      return query.where('title', '=', filters.title).execute();
+      return query.where('title', 'ilike', `%${filters.title}%`).execute();
     }
 
     return query.execute();
