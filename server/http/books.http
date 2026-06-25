@@ -20,3 +20,7 @@ Accept: application/json
 ### @name findBooksByTitle
 GET {{host}}/books/find?title=Duna
 Accept: application/json
+
+### @name findBooks
+GET {{host}}/books/find
+Accept: application/json
